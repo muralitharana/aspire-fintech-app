@@ -12,9 +12,11 @@ import PaymentsScreen from '../screens/payments/PaymentsScreen';
 import CreditScreen from '../screens/credit/CreditScreen';
 import SVGIcons from '../components/SVGIcons';
 import {moderateScale} from '../configs/ScalingSize';
+import SpendingLimit from '../screens/spendingLimit/SpendingLimit';
 
 export type RootStackParamList = {
   [SCREENS.home]: undefined; // No params,
+  [SCREENS.spendingLimit]: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -89,7 +91,7 @@ const AppNavigator = () => (
       }}
       initialRouteName="Main">
       <Stack.Screen name="Main" component={TabNavigator} />
-
+      <Stack.Screen name={SCREENS.spendingLimit} component={SpendingLimit} />
       {/* Add other screens as needed */}
     </Stack.Navigator>
   </NavigationContainer>

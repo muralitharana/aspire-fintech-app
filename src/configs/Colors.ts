@@ -7,4 +7,7 @@ export const Colors = {
   greyMedium: '#0000001F',
   black: 'black',
   white: 'white',
+  lightPrimary: 'rgba(95, 229, 145, 0.2)',
 };
+
+export type ColorType = keyof typeof Colors;

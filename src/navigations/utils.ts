@@ -4,4 +4,5 @@ export const SCREENS = {
   payments: 'Payments',
   credit: 'Credit',
   profile: 'Profile',
+  spendingLimit: 'SpendingLimit',
 };

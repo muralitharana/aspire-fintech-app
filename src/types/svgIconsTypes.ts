@@ -14,4 +14,5 @@ export type SVGIconsName =
   | 'Freeze'
   | 'Deactivate'
   | 'Newcard'
-  | 'ToggleOff';
+  | 'ToggleOff'
+  | 'Weekly';
