@@ -2,7 +2,11 @@ import React, {useState} from 'react';
 
 const useToggleState = () => {
   const [toggle, setToggle] = useState<boolean>(false);
-  return {toggle, setToggle};
+
+  function toggling() {
+    setToggle(prev => !prev);
+  }
+  return {toggle, toggling};
 };
 
 export default useToggleState;

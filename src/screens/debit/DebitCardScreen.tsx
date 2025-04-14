@@ -16,7 +16,8 @@ import DisplayBalance from './DisplayBalance';
 import {ActionItems} from '../../types/debitCardTypes';
 import {SCREENS} from '../../navigations/utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../navigations/types'; // Adjust if needed
+import useToggleState from '../../hooks/useToggleState';
+import {RootStackParamList} from '../../navigations/AppNavigator';
 
 // Screen navigation type
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -58,6 +59,9 @@ const ACTION_ITEMS: ActionItems[] = [
 const DebitCardScreen = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
+
+  const {toggle: isCardNumberShown, toggling: setIsCardNumberShown} =
+    useToggleState();
 
   const handleActionPress = useCallback(
     (id: number | string) => {
@@ -102,10 +106,8 @@ const DebitCardScreen = () => {
             sellingCompany="Aspire"
             cardBrandIcon="CardBrandVisa"
             sellingCompanyIcon="AspireLogo"
-            isAccountNumberHidden={false}
-            onOpenHidePress={() => {
-              // Handle hide/show
-            }}
+            isAccountNumberHidden={isCardNumberShown}
+            onOpenHidePress={() => setIsCardNumberShown()}
           />
         </View>
       </View>

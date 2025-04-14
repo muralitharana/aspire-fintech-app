@@ -19,8 +19,8 @@ const SpendingLimit = () => {
 
   const amounts: MoneyPickerType[] = [
     {id: 1, amount: '5,000'},
-    {id: 1, amount: '10,000'},
-    {id: 1, amount: '20,000'},
+    {id: 2, amount: '10,000'},
+    {id: 3, amount: '20,000'},
   ];
 
   return (
