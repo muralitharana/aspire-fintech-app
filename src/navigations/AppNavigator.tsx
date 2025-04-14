@@ -4,14 +4,13 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {SCREENS} from './utils';
-import TabBarIcon from './TabBarIcon'; // Import the reusable icon component
 import {Colors} from '../configs/Colors';
 import HomeScreen from '../screens/home/HomeScreen';
 import ProfileScreen from '../screens/profile/SettingsScreen';
 import DebitCardScreen from '../screens/debit/DebitCardScreen';
 import PaymentsScreen from '../screens/payments/PaymentsScreen';
 import CreditScreen from '../screens/credit/CreditScreen';
-import SVGIcons from './SVGIcons';
+import SVGIcons from '../components/SVGIcons';
 import {moderateScale} from '../configs/ScalingSize';
 
 export type RootStackParamList = {
