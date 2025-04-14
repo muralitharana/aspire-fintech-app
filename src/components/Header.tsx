@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TextProps, TextStyle, View} from 'react-native';
 import SVGIcons from './SVGIcons';
 import BackButton from './BackButton';
 import {
@@ -13,14 +13,15 @@ import {Colors} from '../configs/Colors';
 interface HeaderProps {
   title: string;
   onBackButtonPress?: () => void;
+  textStyles?: TextStyle;
 }
 
-const Header = ({title, onBackButtonPress}: HeaderProps) => {
+const Header = ({title, textStyles, onBackButtonPress}: HeaderProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
         {onBackButtonPress && <BackButton onPress={onBackButtonPress} />}
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, {...textStyles}]}>{title}</Text>
       </View>
 
       <SVGIcons
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingHorizontal: horizontalScale(10),
     paddingTop: verticalScale(10),
     paddingBottom: verticalScale(5),
