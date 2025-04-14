@@ -18,6 +18,7 @@ import {SCREENS} from '../../navigations/utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import useToggleState from '../../hooks/useToggleState';
 import {RootStackParamList} from '../../navigations/AppNavigator';
+import {useAppSelector} from '../../hooks/useRedux';
 
 // Screen navigation type
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -62,6 +63,8 @@ const DebitCardScreen = () => {
 
   const {toggle: isCardNumberShown, toggling: setIsCardNumberShown} =
     useToggleState();
+
+  const {weeklyDebitLimit} = useAppSelector(state => state.debitSlice);
 
   const handleActionPress = useCallback(
     (id: number | string) => {

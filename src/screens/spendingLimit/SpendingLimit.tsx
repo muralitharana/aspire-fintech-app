@@ -1,5 +1,5 @@
 import {StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Colors} from '../../configs/Colors';
 import Header from '../../components/Header';
@@ -12,16 +12,30 @@ import {
 import Button from '../../components/Button';
 import MoneyPicker, {MoneyPickerType} from './MoneyPicker';
 import LimitDisplayer from './LimitDisplayer';
+import {updateWeeklyDebitCardLimit} from '../../redux/slices/DebitCardSlice';
+import {useAppDispatch} from '../../hooks/useRedux';
 
 const SpendingLimit = () => {
   const insets = useSafeAreaInsets();
   const {getBackToThePreviousScreen} = useBackHandler();
+  const [weeklyLimitAmount, setWeeklyLimitAmount] = useState<string>('');
+
+  const dispatch = useAppDispatch();
 
   const amounts: MoneyPickerType[] = [
     {id: 1, amount: '5,000'},
     {id: 2, amount: '10,000'},
     {id: 3, amount: '20,000'},
   ];
+
+  function handleSelectAmountPicker(amount: string) {
+    setWeeklyLimitAmount(amount);
+  }
+
+  function handleSave() {
+    dispatch(updateWeeklyDebitCardLimit(weeklyLimitAmount));
+    getBackToThePreviousScreen();
+  }
 
   return (
     <View style={[styles.container, {paddingTop: insets.top}]}>
@@ -35,15 +49,18 @@ const SpendingLimit = () => {
 
       <View style={styles.bottomContainer}>
         <View>
-          <LimitDisplayer amount={'5,000'} />
-          <MoneyPicker amounts={amounts} />
+          <LimitDisplayer amount={weeklyLimitAmount} />
+          <MoneyPicker
+            amounts={amounts}
+            onAmountPress={handleSelectAmountPicker}
+          />
         </View>
         <View
           style={{
             paddingHorizontal: horizontalScale(40),
             paddingBottom: verticalScale(20),
           }}>
-          <Button title="Save" onPress={() => {}} />
+          <Button title="Save" onPress={handleSave} />
         </View>
       </View>
     </View>
