@@ -19,11 +19,16 @@ export interface WeeklyDebitLimitType {
   amountSpend: number;
 }
 
+export interface CardStatusType {
+  isFreezed: boolean;
+}
+
 export interface DebitCardType {
   id: number;
   cardDetails: DebitCardDetailsType | null;
   accountBalance: AccountBalanceType | null;
   weeklyLimit: WeeklyDebitLimitType | null;
+  cardStatus: CardStatusType;
 }
 
 export interface ActionItems {
@@ -32,4 +37,5 @@ export interface ActionItems {
   description: string;
   iconName: SVGIconsName;
   actionIconName?: SVGIconsName;
+  enableToggle?: boolean;
 }

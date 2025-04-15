@@ -12,7 +12,7 @@ interface ApiState {
 interface DebitCardStateType {
   selectedDebitCard: DebitCardType | null;
   data: DebitCardType[];
-  apiWeeklyLimitUpdate: ApiState;
+  apiDebitCardDetailsUpdate: ApiState;
 }
 
 const initialApiState = {
@@ -25,7 +25,7 @@ const initialApiState = {
 const initialState: DebitCardStateType & ApiState = {
   selectedDebitCard: null,
   data: [],
-  apiWeeklyLimitUpdate: initialApiState,
+  apiDebitCardDetailsUpdate: initialApiState,
   ...initialApiState,
 };
 
@@ -43,7 +43,9 @@ export const debitCardSlice = createSlice({
     ) => {
       state.isFetching = false;
       state.data = action.payload;
-      state.selectedDebitCard = action.payload[0];
+    },
+    updateSelectedDebitCard: (state, action: PayloadAction<DebitCardType>) => {
+      state.selectedDebitCard = action.payload;
     },
     onFetchDebitCardInfoFailure: (state, action) => {
       state.isFetching = false;
@@ -58,18 +60,30 @@ export const debitCardSlice = createSlice({
         amountSpend: number;
       }>,
     ) => {
-      state.apiWeeklyLimitUpdate.isFetching = true;
-      state.apiWeeklyLimitUpdate.errorMessage = '';
-      state.apiWeeklyLimitUpdate.isError = false;
-      state.apiWeeklyLimitUpdate.isSuccess = false;
+      state.apiDebitCardDetailsUpdate.isFetching = true;
+      state.apiDebitCardDetailsUpdate.errorMessage = '';
+      state.apiDebitCardDetailsUpdate.isError = false;
+      state.apiDebitCardDetailsUpdate.isSuccess = false;
     },
-    onUpdateWeeklyLimitSuccess: (
+    updateDebitCardStatus: (
+      state,
+      action: PayloadAction<{
+        cardId: number;
+        isFreezed: boolean;
+      }>,
+    ) => {
+      state.apiDebitCardDetailsUpdate.isFetching = true;
+      state.apiDebitCardDetailsUpdate.errorMessage = '';
+      state.apiDebitCardDetailsUpdate.isError = false;
+      state.apiDebitCardDetailsUpdate.isSuccess = false;
+    },
+    onUpdateDebitCardDetailsSuccess: (
       state,
       action: PayloadAction<DebitCardType>,
     ) => {
-      state.apiWeeklyLimitUpdate.isFetching = false;
-      state.apiWeeklyLimitUpdate.isSuccess = true;
-
+      state.apiDebitCardDetailsUpdate.isFetching = false;
+      state.apiDebitCardDetailsUpdate.isSuccess = true;
+      console.log('update');
       // Update local state
       const updated = action.payload;
       const index = state.data.findIndex(card => card.id === updated.id);
@@ -82,10 +96,10 @@ export const debitCardSlice = createSlice({
         state.selectedDebitCard = updated;
       }
     },
-    onUpdateWeeklyLimitFailure: (state, action: PayloadAction<string>) => {
-      state.apiWeeklyLimitUpdate.isFetching = false;
-      state.apiWeeklyLimitUpdate.isError = true;
-      state.apiWeeklyLimitUpdate.errorMessage = action.payload;
+    onUpdateDebitCardDetailsFailure: (state, action: PayloadAction<string>) => {
+      state.apiDebitCardDetailsUpdate.isFetching = false;
+      state.apiDebitCardDetailsUpdate.isError = true;
+      state.apiDebitCardDetailsUpdate.errorMessage = action.payload;
     },
   },
 });
@@ -95,7 +109,9 @@ export const {
   onFetchDebitCardInfoFailure,
   onFetchDebitCardInfoSuccess,
   updateDebitCardWeeklyLimit,
-  onUpdateWeeklyLimitSuccess,
-  onUpdateWeeklyLimitFailure,
+  onUpdateDebitCardDetailsSuccess,
+  onUpdateDebitCardDetailsFailure,
+  updateSelectedDebitCard,
+  updateDebitCardStatus,
 } = debitCardSlice.actions;
 export default debitCardSlice.reducer;

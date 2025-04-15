@@ -1,5 +1,9 @@
 import axios from 'axios';
-import {DebitCardType, WeeklyDebitLimitType} from '../types/debitCardTypes';
+import {
+  CardStatusType,
+  DebitCardType,
+  WeeklyDebitLimitType,
+} from '../types/debitCardTypes';
 
 const api = axios.create({
   baseURL: 'http://localhost:3000/', // Replace with your machine IP for mobile
@@ -23,6 +27,14 @@ export const getDebitCards = async (): Promise<DebitCardType[]> => {
 export const patchDebitCard = async (
   cardId: number,
   patchData: {weeklyLimit: WeeklyDebitLimitType},
+): Promise<DebitCardType> => {
+  const response = await api.patch(`debitCards/${cardId}`, patchData);
+  return response.data;
+};
+
+export const patchDebitCardStatus = async (
+  cardId: number,
+  patchData: {cardStatus: CardStatusType},
 ): Promise<DebitCardType> => {
   const response = await api.patch(`debitCards/${cardId}`, patchData);
   return response.data;

@@ -12,6 +12,7 @@ import {ActionItems} from '../types/debitCardTypes';
 
 export interface ActionItemProps extends ActionItems {
   onActionPress?: (id: string | number) => void;
+  enableAction: boolean;
 }
 
 const ActionItem = ({
@@ -20,6 +21,7 @@ const ActionItem = ({
   description,
   actionIconName,
   iconName,
+  enableAction,
   onActionPress,
 }: ActionItemProps) => {
   return (
@@ -46,6 +48,7 @@ const ActionItem = ({
               width={horizontalScale(32)}
               height={verticalScale(32)}
               iconName={actionIconName}
+              fill={enableAction ? Colors.primary : Colors.greyLight}
             />
           )}
         </Pressable>

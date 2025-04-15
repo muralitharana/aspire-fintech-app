@@ -20,8 +20,11 @@
         "curreny": "dollar"
       },
       "weeklyLimit": {
-        "amountLimit": 20000,
-        "amountSpend": 2200
+        "amountLimit": 5000,
+        "amountSpend": 0
+      },
+      "cardStatus": {
+        "isFreezed": false
       }
     },
     {
@@ -40,12 +43,15 @@
         "cardBrand": "Visa"
       },
       "accountBalance": {
-        "amount": 3000,
+        "amount": 12569,
         "curreny": "dollar"
       },
       "weeklyLimit": {
         "amountLimit": 10000,
-        "amountSpend": 5000
+        "amountSpend": 0
+      },
+      "cardStatus": {
+        "isFreezed": false
       }
     }
   ]

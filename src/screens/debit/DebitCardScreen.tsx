@@ -45,9 +45,15 @@ import {ActionItems, DebitCardType} from '../../types/debitCardTypes';
 // Hooks & Redux
 import useToggleState from '../../hooks/useToggleState';
 import {useAppDispatch, useAppSelector} from '../../hooks/useRedux';
-import {fetchDebitCardsInformation} from '../../redux/slices/DebitCardSlice';
+import {
+  fetchDebitCardsInformation,
+  updateDebitCardStatus,
+  updateDebitCardWeeklyLimit,
+  updateSelectedDebitCard,
+} from '../../redux/slices/DebitCardSlice';
 import WeeklyLimitBar from './WeeklyLimitBar';
 import {formatCurrenyNumber} from '../../utils/currency.util';
+import {SVGIconsName} from '../../types/svgIconsTypes';
 
 const {width} = Dimensions.get('window');
 
@@ -67,6 +73,7 @@ const ACTION_ITEMS: ActionItems[] = [
     description: 'You haven’t set any spending limit on card',
     iconName: 'WeeklyLimit',
     actionIconName: 'ToggleOff',
+    enableToggle: true,
   },
   {
     id: 3,
@@ -95,40 +102,90 @@ const DebitCardScreen = () => {
   const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const [actionItems, setActionItems] = useState(ACTION_ITEMS);
-
-  const handleIndexChange = (index: number) => {
-    console.log('Current visible index:', index);
-  };
-
-  useDerivedValue(() => {
-    runOnJS(handleIndexChange)(Math.round(progress.value));
-  }, [progress]);
-
   const {toggle: isCardNumberShown, toggling: setIsCardNumberShown} =
     useToggleState();
-  const {data, selectedDebitCard} = useAppSelector(
+  const {isFetching, data, selectedDebitCard} = useAppSelector(
     state => state.debitCardSlice,
   );
+  const previousIndexRef = useRef<number>(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchDebitCardsInformation());
   }, [dispatch]);
 
-  // const onPressPagination = (index: number) => {
-  //   ref.current?.scrollTo({
-  //     count: index - progress.value,
-  //     animated: true,
-  //   });
-  // };
+  useEffect(() => {
+    if (data.length > 0 && currentIndex < data.length) {
+      dispatch(updateSelectedDebitCard(data[currentIndex]));
+    }
+  }, [data, currentIndex]);
+
+  const handleIndexChange = useCallback((index: number) => {
+    if (previousIndexRef.current !== index) {
+      previousIndexRef.current = index;
+      setCurrentIndex(index); // or dispatch an action or do something else
+    }
+  }, []);
+
+  useDerivedValue(() => {
+    runOnJS(handleIndexChange)(Math.round(progress.value));
+  }, [progress]);
+
+  const updatedActions = useMemo(() => {
+    return actionItems.map((item, i) => {
+      if (i === 1) {
+        const isEnabled = !!selectedDebitCard?.weeklyLimit?.amountLimit;
+        return {
+          ...item,
+          enableToggle: isEnabled,
+          actionIconName: isEnabled
+            ? ('ToggleOn' as SVGIconsName)
+            : ('ToggleOff' as SVGIconsName),
+        };
+      }
+
+      if (i == 2) {
+        return {
+          ...item,
+          enableToggle: !!selectedDebitCard?.cardStatus.isFreezed,
+          actionIconName: selectedDebitCard?.cardStatus.isFreezed
+            ? ('ToggleOn' as SVGIconsName)
+            : ('ToggleOff' as SVGIconsName),
+        };
+      }
+      return item;
+    });
+  }, [actionItems, selectedDebitCard?.weeklyLimit]);
 
   const handleActionPress = useCallback(
     (id: number | string) => {
       if (id === 2) {
-        navigation.navigate(SCREENS.spendingLimit);
+        if (selectedDebitCard?.weeklyLimit?.amountLimit) {
+          dispatch(
+            updateDebitCardWeeklyLimit({
+              cardId: selectedDebitCard?.id!,
+              amountLimit: 0,
+              amountSpend: 0,
+            }),
+          );
+        } else {
+          navigation.navigate(SCREENS.spendingLimit);
+        }
+      }
+
+      if (id === 3) {
+        //freeze
+        console.log('Free');
+        dispatch(
+          updateDebitCardStatus({
+            cardId: selectedDebitCard?.id!,
+            isFreezed: !selectedDebitCard?.cardStatus.isFreezed,
+          }),
+        );
       }
     },
-    [navigation],
+    [navigation, selectedDebitCard],
   );
 
   const renderActionItem: ListRenderItem<ActionItems> = ({item}) => (
@@ -137,6 +194,7 @@ const DebitCardScreen = () => {
       title={item.title}
       description={item.description}
       iconName={item.iconName}
+      enableAction={!!item.enableToggle}
       actionIconName={item.actionIconName}
       onActionPress={handleActionPress}
     />
@@ -154,6 +212,7 @@ const DebitCardScreen = () => {
         cardBrandIcon="CardBrandVisa"
         sellingCompanyIcon="AspireLogo"
         isAccountNumberHidden={isCardNumberShown}
+        isFreezed={item.cardStatus.isFreezed}
       />
     ),
     [isCardNumberShown],
@@ -203,26 +262,20 @@ const DebitCardScreen = () => {
             renderItem={renderCardItem}
           />
 
-          {/* <Pagination.Basic
-            progress={progress}
-            data={data}
-            activeDotStyle={styles.activeDot}
-            dotStyle={styles.inactiveDot}
-            containerStyle={styles.paginationContainer}
-            onPress={onPressPagination}
-          /> */}
-          <WeeklyLimitBar
-            progressColor="primary"
-            limitAmount={selectedDebitCard?.weeklyLimit?.amountLimit!}
-            progress={progressLength}
-            spentAmount={selectedDebitCard?.weeklyLimit?.amountSpend!}
-          />
+          {!!selectedDebitCard?.weeklyLimit?.amountLimit && (
+            <WeeklyLimitBar
+              progressColor="primary"
+              limitAmount={selectedDebitCard?.weeklyLimit?.amountLimit!}
+              progress={progressLength}
+              spentAmount={selectedDebitCard?.weeklyLimit?.amountSpend!}
+            />
+          )}
         </View>
       </View>
 
       {/* Actions List */}
       <FlatList
-        data={actionItems}
+        data={updatedActions}
         renderItem={renderActionItem}
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.flatListContent}

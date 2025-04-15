@@ -21,6 +21,7 @@ interface DebitCardProps extends DebitCardDetailsType {
   cardBrandIcon: SVGIconsName;
   sellingCompanyIcon: SVGIconsName;
   isAccountNumberHidden: boolean;
+  isFreezed?: boolean;
 }
 
 const HidingDot = ({length}: {length: number}) => {
@@ -40,6 +41,7 @@ const DebitCard = ({
   cvv,
   cardBrandIcon,
   sellingCompanyIcon,
+  isFreezed = false,
   isAccountNumberHidden = true,
 }: DebitCardProps) => {
   const cardNumberMapped = useMemo(() => {
@@ -62,8 +64,12 @@ const DebitCard = ({
   }, [cardNumber, isAccountNumberHidden]);
 
   return (
-    <Pressable style={styles.container}>
-      <View style={styles.content}>
+    <Pressable style={[styles.container]}>
+      <View
+        style={[
+          styles.content,
+          {backgroundColor: isFreezed ? Colors.grey : Colors.primary},
+        ]}>
         {/* Top Right Company Logo */}
         <View style={styles.topRightLogo}>
           <SVGIcons

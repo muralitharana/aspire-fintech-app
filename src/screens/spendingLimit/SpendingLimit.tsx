@@ -36,9 +36,9 @@ const SpendingLimit = () => {
   function handleSave() {
     dispatch(
       updateDebitCardWeeklyLimit({
-        cardId: 1,
+        cardId: selectedDebitCard?.id!,
         amountLimit: weeklyLimitAmount,
-        amountSpend: selectedDebitCard?.weeklyLimit?.amountSpend!,
+        amountSpend: selectedDebitCard?.weeklyLimit?.amountSpend || 0,
       }),
     );
     getBackToThePreviousScreen();
