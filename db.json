@@ -1,10 +1,15 @@
 {
   "debitCards": [
     {
-      "id": 1,
+      "id": "1",
       "cardDetails": {
         "userName": "Mark Henry",
-        "cardNumber": ["5647", "3411", "2413", "2020"],
+        "cardNumber": [
+          "5647",
+          "3411",
+          "2413",
+          "2020"
+        ],
         "expireDate": "Thru: 12/20",
         "cvv": "456",
         "sellingCompany": "Aspire",
@@ -12,15 +17,23 @@
       },
       "accountBalance": {
         "amount": 3000,
-        "curreny": "dollar",
-        "formated": "3,000"
+        "curreny": "dollar"
+      },
+      "weeklyLimit": {
+        "amountLimit": 20000,
+        "amountSpend": 2200
       }
     },
     {
-      "id": 2,
+      "id": "2",
       "cardDetails": {
         "userName": "Mark Henry",
-        "cardNumber": ["5647", "3411", "2413", "2021"],
+        "cardNumber": [
+          "5647",
+          "3411",
+          "2413",
+          "2021"
+        ],
         "expireDate": "Thru: 12/21",
         "cvv": "457",
         "sellingCompany": "Aspire",
@@ -28,8 +41,11 @@
       },
       "accountBalance": {
         "amount": 3000,
-        "curreny": "dollar",
-        "formated": "3,000"
+        "curreny": "dollar"
+      },
+      "weeklyLimit": {
+        "amountLimit": 10000,
+        "amountSpend": 5000
       }
     }
   ]

@@ -2,15 +2,16 @@ import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import MoneyButton from './MoneyButton';
 import {moderateScale} from '../../configs/ScalingSize';
+import {formatCurrenyNumber} from '../../utils/currency.util';
 
 export interface MoneyPickerType {
   id: number;
-  amount: string;
+  amount: number;
 }
 
 interface MoneyPickerProps {
   amounts: MoneyPickerType[];
-  onAmountPress?: (amount: string) => void;
+  onAmountPress?: (amount: number) => void;
 }
 
 const MoneyPicker = ({amounts, onAmountPress}: MoneyPickerProps) => {
@@ -19,7 +20,7 @@ const MoneyPicker = ({amounts, onAmountPress}: MoneyPickerProps) => {
       {amounts.map(item => (
         <View key={item.id} style={styles.buttonWrapper}>
           <MoneyButton
-            amount={item.amount}
+            amount={formatCurrenyNumber(item.amount)}
             onPress={() => onAmountPress?.(item.amount)}
           />
         </View>

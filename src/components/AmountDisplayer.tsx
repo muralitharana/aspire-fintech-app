@@ -10,7 +10,7 @@ import {
 import {Colors, ColorType} from '../configs/Colors';
 
 export interface AmountDisplayerProps {
-  amount: string;
+  amount: number | string;
   amountColor?: ColorType;
 }
 
@@ -21,7 +21,7 @@ const AmountDisplayer = ({
   return (
     <View style={styles.container}>
       <DollarContainer />
-      {amount && (
+      {!!amount && (
         <Text style={[styles.amountText, {color: Colors[amountColor]}]}>
           {amount}
         </Text>

@@ -12,28 +12,35 @@ import {
 import Button from '../../components/Button';
 import MoneyPicker, {MoneyPickerType} from './MoneyPicker';
 import LimitDisplayer from './LimitDisplayer';
-import {updateWeeklyDebitCardLimit} from '../../redux/slices/DebitCardSlice';
-import {useAppDispatch} from '../../hooks/useRedux';
+import {useAppDispatch, useAppSelector} from '../../hooks/useRedux';
+import {updateDebitCardWeeklyLimit} from '../../redux/slices/DebitCardSlice';
 
 const SpendingLimit = () => {
   const insets = useSafeAreaInsets();
   const {getBackToThePreviousScreen} = useBackHandler();
-  const [weeklyLimitAmount, setWeeklyLimitAmount] = useState<string>('');
+  const [weeklyLimitAmount, setWeeklyLimitAmount] = useState<number>(0);
 
   const dispatch = useAppDispatch();
+  const {selectedDebitCard} = useAppSelector(state => state.debitCardSlice);
 
   const amounts: MoneyPickerType[] = [
-    {id: 1, amount: '5,000'},
-    {id: 2, amount: '10,000'},
-    {id: 3, amount: '20,000'},
+    {id: 1, amount: 5000},
+    {id: 2, amount: 10000},
+    {id: 3, amount: 20000},
   ];
 
-  function handleSelectAmountPicker(amount: string) {
+  function handleSelectAmountPicker(amount: number) {
     setWeeklyLimitAmount(amount);
   }
 
   function handleSave() {
-    dispatch(updateWeeklyDebitCardLimit(weeklyLimitAmount));
+    dispatch(
+      updateDebitCardWeeklyLimit({
+        cardId: 1,
+        amountLimit: weeklyLimitAmount,
+        amountSpend: selectedDebitCard?.weeklyLimit?.amountSpend!,
+      }),
+    );
     getBackToThePreviousScreen();
   }
 

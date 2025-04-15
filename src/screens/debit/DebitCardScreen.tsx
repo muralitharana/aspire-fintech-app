@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -47,6 +47,7 @@ import useToggleState from '../../hooks/useToggleState';
 import {useAppDispatch, useAppSelector} from '../../hooks/useRedux';
 import {fetchDebitCardsInformation} from '../../redux/slices/DebitCardSlice';
 import WeeklyLimitBar from './WeeklyLimitBar';
+import {formatCurrenyNumber} from '../../utils/currency.util';
 
 const {width} = Dimensions.get('window');
 
@@ -114,12 +115,12 @@ const DebitCardScreen = () => {
     dispatch(fetchDebitCardsInformation());
   }, [dispatch]);
 
-  const onPressPagination = (index: number) => {
-    ref.current?.scrollTo({
-      count: index - progress.value,
-      animated: true,
-    });
-  };
+  // const onPressPagination = (index: number) => {
+  //   ref.current?.scrollTo({
+  //     count: index - progress.value,
+  //     animated: true,
+  //   });
+  // };
 
   const handleActionPress = useCallback(
     (id: number | string) => {
@@ -158,13 +159,23 @@ const DebitCardScreen = () => {
     [isCardNumberShown],
   );
 
+  const progressLength = useMemo(() => {
+    return (
+      Number(selectedDebitCard?.weeklyLimit?.amountSpend) /
+        Number(selectedDebitCard?.weeklyLimit?.amountLimit) || 0
+    );
+  }, [selectedDebitCard?.weeklyLimit]);
+
   return (
     <View style={[styles.container, {paddingTop: insets.top}]}>
       {/* Header and Balance */}
       <View style={styles.headerContainer}>
         <Header title="Debit Card" />
         <DisplayBalance
-          amount={selectedDebitCard?.accountBalance?.formated || '0'}
+          amount={
+            formatCurrenyNumber(selectedDebitCard?.accountBalance?.amount!) ||
+            '0'
+          }
           amountColor="white"
         />
       </View>
@@ -202,9 +213,9 @@ const DebitCardScreen = () => {
           /> */}
           <WeeklyLimitBar
             progressColor="primary"
-            limitAmount={selectedDebitCard?.accountBalance?.amount!}
-            progress={0.2}
-            spentAmount={350}
+            limitAmount={selectedDebitCard?.weeklyLimit?.amountLimit!}
+            progress={progressLength}
+            spentAmount={selectedDebitCard?.weeklyLimit?.amountSpend!}
           />
         </View>
       </View>

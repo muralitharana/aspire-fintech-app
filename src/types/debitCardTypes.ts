@@ -11,14 +11,19 @@ export interface DebitCardDetailsType {
 
 export interface AccountBalanceType {
   amount: number;
-  currency: string;
-  formated: string;
+  currency: number;
+}
+
+export interface WeeklyDebitLimitType {
+  amountLimit: number;
+  amountSpend: number;
 }
 
 export interface DebitCardType {
   id: number;
   cardDetails: DebitCardDetailsType | null;
   accountBalance: AccountBalanceType | null;
+  weeklyLimit: WeeklyDebitLimitType | null;
 }
 
 export interface ActionItems {
