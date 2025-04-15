@@ -1,2 +1,4 @@
-const REDUCERS = {};
+const REDUCERS = {
+  debitCardSlice: 'debitCardSlice',
+};
 export {REDUCERS};

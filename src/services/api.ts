@@ -1,7 +1,8 @@
 import axios from 'axios';
+import {AccountBalanceType, DebitCardType} from '../types/debitCardTypes';
 
 const api = axios.create({
-  baseURL: 'http://10.0.2.2:3000/',
+  baseURL: 'http://localhost:3000/',
 });
 
 api.interceptors.response.use(
@@ -11,3 +12,10 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+export const getDebitCards = async (): Promise<{
+  data: DebitCardType[];
+}> => {
+  const response = await api.get(`debitCards`);
+  return response.data;
+};

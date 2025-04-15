@@ -1,3 +1,36 @@
 {
-  "debits": []
+  "debitCards": [
+    {
+      "id": 1,
+      "cardDetails": {
+        "userName": "Mark Henry",
+        "cardNumber": ["5647", "3411", "2413", "2020"],
+        "expireDate": "Thru: 12/20",
+        "cvv": "456",
+        "sellingCompany": "Aspire",
+        "cardBrand": "Visa"
+      },
+      "accountBalance": {
+        "amount": 3000,
+        "curreny": "dollar",
+        "formated": "3,000"
+      }
+    },
+    {
+      "id": 2,
+      "cardDetails": {
+        "userName": "Mark Henry",
+        "cardNumber": ["5647", "3411", "2413", "2021"],
+        "expireDate": "Thru: 12/21",
+        "cvv": "457",
+        "sellingCompany": "Aspire",
+        "cardBrand": "Visa"
+      },
+      "accountBalance": {
+        "amount": 3000,
+        "curreny": "dollar",
+        "formated": "3,000"
+      }
+    }
+  ]
 }

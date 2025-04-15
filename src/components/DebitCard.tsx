@@ -14,14 +14,13 @@ import {
 import {Colors} from '../configs/Colors';
 import {Fonts} from '../configs/Fonts';
 import SVGIcons from './SVGIcons';
-import {DebitCardType} from '../types/debitCardTypes';
+import {DebitCardDetailsType, DebitCardType} from '../types/debitCardTypes';
 import {SVGIconsName} from '../types/svgIconsTypes';
 
-interface DebitCardProps extends DebitCardType {
+interface DebitCardProps extends DebitCardDetailsType {
   cardBrandIcon: SVGIconsName;
   sellingCompanyIcon: SVGIconsName;
   isAccountNumberHidden: boolean;
-  onOpenHidePress: (props: GestureResponderEvent | null) => void;
 }
 
 const HidingDot = ({length}: {length: number}) => {
@@ -42,7 +41,6 @@ const DebitCard = ({
   cardBrandIcon,
   sellingCompanyIcon,
   isAccountNumberHidden = true,
-  onOpenHidePress,
 }: DebitCardProps) => {
   const cardNumberMapped = useMemo(() => {
     if (!cardNumber) return [];
@@ -66,17 +64,6 @@ const DebitCard = ({
   return (
     <Pressable style={styles.container}>
       <View style={styles.content}>
-        {/* Toggle Button */}
-        <Pressable style={styles.toggleButton} onPress={onOpenHidePress}>
-          <SVGIcons
-            iconName={isAccountNumberHidden ? 'EyeOpen' : 'EyeClosed'}
-            style={styles.toggleIcon}
-          />
-          <Text style={styles.toggleText}>
-            {isAccountNumberHidden ? 'Show Card Number' : 'Hide Card Number'}
-          </Text>
-        </Pressable>
-
         {/* Top Right Company Logo */}
         <View style={styles.topRightLogo}>
           <SVGIcons
@@ -172,7 +159,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   nameContainer: {
-    marginVertical: verticalScale(20),
+    marginVertical: verticalScale(16),
   },
   nameText: {
     fontFamily: Fonts.fontBold,
@@ -204,7 +191,7 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: 'row',
-    marginVertical: verticalScale(12),
+    marginVertical: verticalScale(10),
     alignItems: 'center',
   },
   infoText: {
