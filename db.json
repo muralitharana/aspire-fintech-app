@@ -4,12 +4,7 @@
       "id": "1",
       "cardDetails": {
         "userName": "Mark Henry",
-        "cardNumber": [
-          "5647",
-          "3411",
-          "2413",
-          "2020"
-        ],
+        "cardNumber": ["5647", "3411", "2413", "2020"],
         "expireDate": "Thru: 12/20",
         "cvv": "456",
         "sellingCompany": "Aspire",
@@ -21,34 +16,7 @@
       },
       "weeklyLimit": {
         "amountLimit": 20000,
-        "amountSpend": 2431
-      },
-      "cardStatus": {
-        "isFreezed": false
-      }
-    },
-    {
-      "id": "2",
-      "cardDetails": {
-        "userName": "Muralitharan",
-        "cardNumber": [
-          "7639",
-          "6966",
-          "8323",
-          "9407"
-        ],
-        "expireDate": "Thru: 12/28",
-        "cvv": "123",
-        "sellingCompany": "Example Bank",
-        "cardBrand": "MasterCard"
-      },
-      "accountBalance": {
-        "amount": 5000,
-        "currency": "dollar"
-      },
-      "weeklyLimit": {
-        "amountLimit": 0,
-        "amountSpend": 0
+        "amountSpend": 5678
       },
       "cardStatus": {
         "isFreezed": false

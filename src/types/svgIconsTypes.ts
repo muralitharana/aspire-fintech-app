@@ -16,4 +16,5 @@ export type SVGIconsName =
   | 'Newcard'
   | 'ToggleOff'
   | 'ToggleOn'
-  | 'Weekly';
+  | 'Weekly'
+  | 'AspireHome';

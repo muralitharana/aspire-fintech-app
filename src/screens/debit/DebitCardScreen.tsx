@@ -181,8 +181,8 @@ const DebitCardScreen = () => {
             cardNumber: cardNumber,
             expireDate: expireDate,
             cvv: '123',
-            sellingCompany: 'Example Bank',
-            cardBrand: 'MasterCard',
+            sellingCompany: 'Aspire',
+            cardBrand: 'Visa',
           },
           accountBalance: {
             amount: 5000,
@@ -273,7 +273,7 @@ const DebitCardScreen = () => {
             data={data}
             width={width}
             ref={ref}
-            height={verticalScale(195)}
+            height={verticalScale(Platform.OS === 'ios' ? 195 : 210)}
             onProgressChange={progress}
             renderItem={renderCardItem}
             mode="vertical-stack"

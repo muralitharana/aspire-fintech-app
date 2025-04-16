@@ -37,7 +37,7 @@ const TabNavigator = () => (
     <Tab.Screen
       options={{
         tabBarIcon: ({focused}) => (
-          <SVGIcons iconName="HomeIcon" focused={focused} />
+          <SVGIcons iconName="AspireHome" focused={focused} />
         ),
       }}
       name={SCREENS.home}
