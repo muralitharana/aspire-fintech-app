@@ -25,7 +25,7 @@ const ActionItem = ({
   onActionPress,
 }: ActionItemProps) => {
   return (
-    <Pressable style={styles.container}>
+    <Pressable style={styles.container} onPress={() => onActionPress?.(id)}>
       <View style={styles.content}>
         <View style={styles.iconPlaceholder}>
           <SVGIcons

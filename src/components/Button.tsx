@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   View,
+  ViewStyle,
 } from 'react-native';
 import React from 'react';
 import {Fonts} from '../configs/Fonts';
@@ -16,6 +17,7 @@ interface ButtonProps extends TouchableOpacityProps {
   buttonColor?: ColorType;
   titleColor?: ColorType;
   textStyle?: TextStyle;
+  buttonStyles?: ViewStyle;
 }
 
 const Button = ({
@@ -23,11 +25,16 @@ const Button = ({
   buttonColor = 'primary',
   titleColor = 'white',
   textStyle,
+  buttonStyles,
   ...props
 }: ButtonProps) => {
   return (
     <TouchableOpacity
-      style={[styles.button, {backgroundColor: Colors[buttonColor]}]}
+      style={[
+        styles.button,
+        {backgroundColor: Colors[buttonColor]},
+        {...buttonStyles},
+      ]}
       {...props}>
       <Text style={[styles.title, {color: Colors[titleColor]}, {...textStyle}]}>
         {title}
