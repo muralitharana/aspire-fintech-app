@@ -39,3 +39,10 @@ export const patchDebitCardStatus = async (
   const response = await api.patch(`debitCards/${cardId}`, patchData);
   return response.data;
 };
+
+export const addDebitCardDetails = async (
+  data: DebitCardType,
+): Promise<DebitCardType> => {
+  const response = await api.post(`debitCards`, data);
+  return response.data;
+};

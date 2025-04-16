@@ -10,7 +10,15 @@ export const store = configureStore({
   reducer: {
     [REDUCERS.debitCardSlice]: DebitCardReducer,
   },
-  middleware: getMiddleware => getMiddleware().concat(middlewareSaga),
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action paths
+        ignoredActionPaths: ['payload.onSuccess', 'payload.onFailure'],
+        // Optionally ignore state paths too, if needed
+        ignoredPaths: [],
+      },
+    }).concat(middlewareSaga),
 });
 
 middlewareSaga.run(debitCardSaga);

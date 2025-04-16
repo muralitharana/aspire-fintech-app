@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createAction, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {DebitCardType, WeeklyDebitLimitType} from '../../types/debitCardTypes';
 import {REDUCERS} from '../utils';
 
@@ -28,6 +28,13 @@ const initialState: DebitCardStateType & ApiState = {
   apiDebitCardDetailsUpdate: initialApiState,
   ...initialApiState,
 };
+
+// specific action action for callback based approach
+export const addDebitCardApi = createAction<{
+  debitCard: DebitCardType;
+  onSuccess?: (data?: any) => void;
+  onFailure?: (error?: any) => void;
+}>('debitCard/addDebitCard');
 
 export const debitCardSlice = createSlice({
   name: REDUCERS.debitCardSlice,
@@ -83,7 +90,7 @@ export const debitCardSlice = createSlice({
     ) => {
       state.apiDebitCardDetailsUpdate.isFetching = false;
       state.apiDebitCardDetailsUpdate.isSuccess = true;
-      console.log('update');
+
       // Update local state
       const updated = action.payload;
       const index = state.data.findIndex(card => card.id === updated.id);

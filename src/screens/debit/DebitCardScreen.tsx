@@ -1,3 +1,4 @@
+// React and React Native imports
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   FlatList,
@@ -32,10 +33,7 @@ import DisplayBalance from './DisplayBalance';
 import DebitCard from '../../components/DebitCard';
 import ActionItem from '../../components/ActionItem';
 import SVGIcons from '../../components/SVGIcons';
-import Carousel, {
-  ICarouselInstance,
-  Pagination,
-} from 'react-native-reanimated-carousel';
+import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 
 // Navigation & Types
 import {SCREENS} from '../../navigations/utils';
@@ -46,55 +44,29 @@ import {ActionItems, DebitCardType} from '../../types/debitCardTypes';
 import useToggleState from '../../hooks/useToggleState';
 import {useAppDispatch, useAppSelector} from '../../hooks/useRedux';
 import {
+  addDebitCardApi,
   fetchDebitCardsInformation,
   updateDebitCardStatus,
   updateDebitCardWeeklyLimit,
   updateSelectedDebitCard,
 } from '../../redux/slices/DebitCardSlice';
-import WeeklyLimitBar from './WeeklyLimitBar';
-import {formatCurrenyNumber} from '../../utils/currency.util';
-import {SVGIconsName} from '../../types/svgIconsTypes';
 
+// Utilities
+import {formatCurrenyNumber} from '../../utils/currency.util';
+import {generateCardNumber, generateExpiryDate} from '../../utils/card.util';
+
+// Local components
+import WeeklyLimitBar from './WeeklyLimitBar';
+import AddNewCard from './AddNewCard';
+import Loading from '../../components/Loading';
+import {ACTION_ITEMS, processActionItems} from './utils';
+import Toast from 'react-native-toast-message';
+
+// Constants
 const {width} = Dimensions.get('window');
 
+// Types
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
-// Static Action Items
-const ACTION_ITEMS: ActionItems[] = [
-  {
-    id: 1,
-    title: 'Top-Up account',
-    description: 'Deposit money to your account to use with card',
-    iconName: 'TopUp',
-  },
-  {
-    id: 2,
-    title: 'Weekly spending limit',
-    description: 'You haven’t set any spending limit on card',
-    iconName: 'WeeklyLimit',
-    actionIconName: 'ToggleOff',
-    enableToggle: true,
-  },
-  {
-    id: 3,
-    title: 'Freeze card',
-    description: 'Your debit card is currently active',
-    iconName: 'Freeze',
-    actionIconName: 'ToggleOff',
-  },
-  {
-    id: 4,
-    title: 'Get a new card',
-    description: 'This deactivates your current debit card',
-    iconName: 'Deactivate',
-  },
-  {
-    id: 5,
-    title: 'Deactivated cards',
-    description: 'Your previously deactivated cards',
-    iconName: 'Newcard',
-  },
-];
 
 const DebitCardScreen = () => {
   const insets = useSafeAreaInsets();
@@ -102,59 +74,54 @@ const DebitCardScreen = () => {
   const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const [actionItems, setActionItems] = useState(ACTION_ITEMS);
+  const previousIndexRef = useRef<number>(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
   const {toggle: isCardNumberShown, toggling: setIsCardNumberShown} =
     useToggleState();
+
+  const [isAddNewCardModelOpen, setIsAddNewCardOpenModelOpen] =
+    useState<boolean>(false);
+
   const {isFetching, data, selectedDebitCard} = useAppSelector(
     state => state.debitCardSlice,
   );
-  const previousIndexRef = useRef<number>(0);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const dispatch = useAppDispatch();
 
+  // Fetch Debit Cards Information
   useEffect(() => {
+    console.log('CALLEd');
     dispatch(fetchDebitCardsInformation());
   }, [dispatch]);
 
+  // Update selected debit card on index change
   useEffect(() => {
     if (data.length > 0 && currentIndex < data.length) {
+      console.log(data[currentIndex].cardDetails?.userName);
       dispatch(updateSelectedDebitCard(data[currentIndex]));
     }
   }, [data, currentIndex]);
 
-  const handleIndexChange = useCallback((index: number) => {
-    if (previousIndexRef.current !== index) {
-      previousIndexRef.current = index;
-      setCurrentIndex(index); // or dispatch an action or do something else
-    }
-  }, []);
+  const handleIndexChange = useCallback(
+    (index: number) => {
+      if (previousIndexRef.current !== index) {
+        previousIndexRef.current = index;
+
+        setCurrentIndex(index); // or dispatch an action or do something else
+      }
+    },
+    [selectedDebitCard],
+  );
 
   useDerivedValue(() => {
     runOnJS(handleIndexChange)(Math.round(progress.value));
   }, [progress]);
 
   const updatedActions = useMemo(() => {
-    return actionItems.map((item, i) => {
-      if (i === 1) {
-        const isEnabled = !!selectedDebitCard?.weeklyLimit?.amountLimit;
-        return {
-          ...item,
-          enableToggle: isEnabled,
-          actionIconName: isEnabled
-            ? ('ToggleOn' as SVGIconsName)
-            : ('ToggleOff' as SVGIconsName),
-        };
-      }
-
-      if (i == 2) {
-        return {
-          ...item,
-          enableToggle: !!selectedDebitCard?.cardStatus.isFreezed,
-          actionIconName: selectedDebitCard?.cardStatus.isFreezed
-            ? ('ToggleOn' as SVGIconsName)
-            : ('ToggleOff' as SVGIconsName),
-        };
-      }
-      return item;
+    return processActionItems({
+      actionItems,
+      isAmountLimitEnabled: !!selectedDebitCard?.weeklyLimit?.amountLimit,
+      isCardFreezed: !!selectedDebitCard?.cardStatus.isFreezed,
     });
   }, [actionItems, selectedDebitCard?.weeklyLimit]);
 
@@ -175,7 +142,7 @@ const DebitCardScreen = () => {
       }
 
       if (id === 3) {
-        //freeze
+        // freeze/unfreeze card
         console.log('Free');
         dispatch(
           updateDebitCardStatus({
@@ -184,9 +151,62 @@ const DebitCardScreen = () => {
           }),
         );
       }
+
+      if (id === 4) {
+        setIsAddNewCardOpenModelOpen(true);
+      }
     },
     [navigation, selectedDebitCard],
   );
+
+  const progressLength = useMemo(() => {
+    const amountSpend = selectedDebitCard?.weeklyLimit?.amountSpend || 0;
+    const amountLimit = selectedDebitCard?.weeklyLimit?.amountLimit || 0;
+    return amountSpend / amountLimit;
+  }, [selectedDebitCard?.weeklyLimit]);
+
+  const handleAddNewcard = (text: string) => {
+    setIsAddNewCardOpenModelOpen(false);
+    const cardNumber = generateCardNumber();
+    const expireDate = generateExpiryDate();
+    const id = (data.length + 1).toString();
+
+    dispatch(
+      addDebitCardApi({
+        debitCard: {
+          id: id as unknown as number,
+          cardDetails: {
+            userName: text,
+            cardNumber: cardNumber,
+            expireDate: expireDate,
+            cvv: '123',
+            sellingCompany: 'Example Bank',
+            cardBrand: 'MasterCard',
+          },
+          accountBalance: {
+            amount: 5000,
+            currency: 'dollar',
+          },
+          weeklyLimit: {
+            amountLimit: 0,
+            amountSpend: 0,
+          },
+          cardStatus: {
+            isFreezed: false,
+          },
+        },
+        onSuccess: data => {
+          Toast.show({
+            type: 'success',
+            text1: 'Card Added Successfully.',
+            position: 'bottom',
+            visibilityTime: 2000,
+          });
+          setCurrentIndex(0);
+        },
+      }),
+    );
+  };
 
   const renderActionItem: ListRenderItem<ActionItems> = ({item}) => (
     <ActionItem
@@ -218,12 +238,9 @@ const DebitCardScreen = () => {
     [isCardNumberShown],
   );
 
-  const progressLength = useMemo(() => {
-    return (
-      Number(selectedDebitCard?.weeklyLimit?.amountSpend) /
-        Number(selectedDebitCard?.weeklyLimit?.amountLimit) || 0
-    );
-  }, [selectedDebitCard?.weeklyLimit]);
+  if (isFetching) {
+    return <Loading text="Api fetching" />;
+  }
 
   return (
     <View style={[styles.container, {paddingTop: insets.top}]}>
@@ -232,8 +249,7 @@ const DebitCardScreen = () => {
         <Header title="Debit Card" />
         <DisplayBalance
           amount={
-            formatCurrenyNumber(selectedDebitCard?.accountBalance?.amount!) ||
-            '0'
+            formatCurrenyNumber(selectedDebitCard?.accountBalance?.amount!) || 0
           }
           amountColor="white"
         />
@@ -258,8 +274,8 @@ const DebitCardScreen = () => {
             ref={ref}
             height={verticalScale(195)}
             onProgressChange={progress}
-            defaultIndex={0}
             renderItem={renderCardItem}
+            mode="vertical-stack"
           />
 
           {!!selectedDebitCard?.weeklyLimit?.amountLimit && (
@@ -283,12 +299,20 @@ const DebitCardScreen = () => {
         bounces={false}
         scrollEnabled
       />
+
+      {/* Add New Card */}
+      <AddNewCard
+        visible={isAddNewCardModelOpen}
+        onSave={handleAddNewcard}
+        onClose={() => setIsAddNewCardOpenModelOpen(false)}
+      />
     </View>
   );
 };
 
 export default DebitCardScreen;
 
+// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -336,16 +360,5 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(20),
     backgroundColor: Colors.white,
     paddingHorizontal: horizontalScale(5),
-  },
-  activeDot: {
-    backgroundColor: Colors.primary,
-    borderRadius: 30,
-  },
-  inactiveDot: {
-    backgroundColor: Colors.greyLight,
-    borderRadius: 30,
-  },
-  paginationContainer: {
-    gap: 5,
   },
 });

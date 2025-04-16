@@ -1,10 +1,12 @@
 import {call, put, takeEvery} from 'redux-saga/effects';
 import {
+  addDebitCardDetails,
   getDebitCards,
   patchDebitCard,
   patchDebitCardStatus,
 } from '../../services/api';
 import {
+  addDebitCardApi,
   fetchDebitCardsInformation,
   onFetchDebitCardInfoFailure,
   onFetchDebitCardInfoSuccess,
@@ -17,11 +19,10 @@ import {DebitCardType} from '../../types/debitCardTypes';
 
 function* workGetDebitcardsFetch() {
   try {
-    console.log('Fetching debit cards...');
     const debitCards: DebitCardType[] = yield call(getDebitCards);
-    yield put(onFetchDebitCardInfoSuccess(debitCards));
+    const reversed = debitCards.reverse();
+    yield put(onFetchDebitCardInfoSuccess(reversed));
   } catch (error) {
-    console.warn('Debit card fetch failed:', error);
     if (error instanceof Error) {
       yield put(onFetchDebitCardInfoFailure(error.message));
     } else {
@@ -81,11 +82,32 @@ function* workUpdateDebitCardStatus(
   }
 }
 
+function* addDebitCardSaga(action: ReturnType<typeof addDebitCardApi>) {
+  const {debitCard, onSuccess, onFailure} = action.payload;
+
+  try {
+    const response: DebitCardType = yield call(() =>
+      addDebitCardDetails(debitCard),
+    );
+    // Optionally dispatch a success action here
+
+    if (onSuccess) {
+      yield call(onSuccess, response);
+      yield call(workGetDebitcardsFetch); // refetching data
+    }
+  } catch (error: any) {
+    // Optionally dispatch a failure action here
+    if (onFailure) {
+      yield call(onFailure, error);
+    }
+  }
+}
+
 function* debitCardSaga() {
-  console.log('Debit card saga initialized');
   yield takeEvery(fetchDebitCardsInformation.type, workGetDebitcardsFetch);
   yield takeEvery(updateDebitCardWeeklyLimit.type, workUpdateWeeklyLimit);
   yield takeEvery(updateDebitCardStatus.type, workUpdateDebitCardStatus);
+  yield takeEvery(addDebitCardApi.type, addDebitCardSaga);
 }
 
 export default debitCardSaga;

@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Colors} from '../../configs/Colors';
@@ -14,6 +14,7 @@ import MoneyPicker, {MoneyPickerType} from './MoneyPicker';
 import LimitDisplayer from './LimitDisplayer';
 import {useAppDispatch, useAppSelector} from '../../hooks/useRedux';
 import {updateDebitCardWeeklyLimit} from '../../redux/slices/DebitCardSlice';
+import {formatCurrenyNumber} from '../../utils/currency.util';
 
 const SpendingLimit = () => {
   const insets = useSafeAreaInsets();
@@ -34,6 +35,7 @@ const SpendingLimit = () => {
   }
 
   function handleSave() {
+    if (!weeklyLimitAmount) return Alert.alert('Please select weekly limit.');
     dispatch(
       updateDebitCardWeeklyLimit({
         cardId: selectedDebitCard?.id!,
@@ -56,7 +58,7 @@ const SpendingLimit = () => {
 
       <View style={styles.bottomContainer}>
         <View>
-          <LimitDisplayer amount={weeklyLimitAmount} />
+          <LimitDisplayer amount={formatCurrenyNumber(weeklyLimitAmount)} />
           <MoneyPicker
             amounts={amounts}
             onAmountPress={handleSelectAmountPicker}

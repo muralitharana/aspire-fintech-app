@@ -8,6 +8,7 @@ import {
 } from '../../configs/ScalingSize';
 import {Colors, ColorType} from '../../configs/Colors';
 import {Fonts} from '../../configs/Fonts';
+import {formatCurrenyNumber} from '../../utils/currency.util';
 
 interface WeeklyLimitBarProps {
   progress: number; // e.g. 0.5 for 50%
@@ -28,8 +29,12 @@ const WeeklyLimitBar = ({
         <Text style={styles.title}>Debit card spending limit</Text>
 
         <View style={styles.amountWrapper}>
-          <Text style={styles.spentAmount}>${spentAmount}</Text>
-          <Text style={styles.limitAmount}>${limitAmount}</Text>
+          <Text style={styles.spentAmount}>
+            ${formatCurrenyNumber(spentAmount)}
+          </Text>
+          <Text style={styles.limitAmount}>
+            ${formatCurrenyNumber(limitAmount)}
+          </Text>
         </View>
       </View>
 

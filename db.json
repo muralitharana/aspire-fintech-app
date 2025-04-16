@@ -16,12 +16,12 @@
         "cardBrand": "Visa"
       },
       "accountBalance": {
-        "amount": 3000,
+        "amount": 56000,
         "curreny": "dollar"
       },
       "weeklyLimit": {
-        "amountLimit": 5000,
-        "amountSpend": 0
+        "amountLimit": 20000,
+        "amountSpend": 2431
       },
       "cardStatus": {
         "isFreezed": false
@@ -30,24 +30,24 @@
     {
       "id": "2",
       "cardDetails": {
-        "userName": "Mark Henry",
+        "userName": "Muralitharan",
         "cardNumber": [
-          "5647",
-          "3411",
-          "2413",
-          "2021"
+          "7639",
+          "6966",
+          "8323",
+          "9407"
         ],
-        "expireDate": "Thru: 12/21",
-        "cvv": "457",
-        "sellingCompany": "Aspire",
-        "cardBrand": "Visa"
+        "expireDate": "Thru: 12/28",
+        "cvv": "123",
+        "sellingCompany": "Example Bank",
+        "cardBrand": "MasterCard"
       },
       "accountBalance": {
-        "amount": 12569,
-        "curreny": "dollar"
+        "amount": 5000,
+        "currency": "dollar"
       },
       "weeklyLimit": {
-        "amountLimit": 10000,
+        "amountLimit": 0,
         "amountSpend": 0
       },
       "cardStatus": {

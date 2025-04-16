@@ -1,10 +1,10 @@
-const generateCardNumber = (): string[] => {
+const generateCardNumber = (): [string, string, string, string] => {
   const parts: string[] = [];
   for (let i = 0; i < 4; i++) {
     const block = Math.floor(1000 + Math.random() * 9000); // ensures a 4-digit number
     parts.push(block.toString());
   }
-  return parts;
+  return parts as [string, string, string, string];
 };
 
 const generateExpiryDate = (): string => {

@@ -11,7 +11,7 @@ export interface DebitCardDetailsType {
 
 export interface AccountBalanceType {
   amount: number;
-  currency: number;
+  currency: string;
 }
 
 export interface WeeklyDebitLimitType {
