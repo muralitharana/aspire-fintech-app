@@ -78,7 +78,7 @@ const DebitCardScreen = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const {toggle: isCardNumberShown, toggling: setIsCardNumberShown} =
-    useToggleState();
+    useToggleState(true);
 
   const [isAddNewCardModelOpen, setIsAddNewCardOpenModelOpen] =
     useState<boolean>(false);

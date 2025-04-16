@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-const useToggleState = () => {
-  const [toggle, setToggle] = useState<boolean>(false);
+const useToggleState = (initialState = false) => {
+  const [toggle, setToggle] = useState<boolean>(initialState);
 
   function toggling() {
     setToggle(prev => !prev);
