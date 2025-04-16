@@ -1,20 +1,17 @@
 import React, {useState} from 'react';
 import {
-  Modal,
-  ModalProps,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import {Colors} from '../../configs/Colors';
 import {moderateScale, verticalScale} from '../../configs/ScalingSize';
 import {Fonts} from '../../configs/Fonts';
 import Button from '../../components/Button';
-
+import Modal, {ModalProps} from 'react-native-modalbox';
 // Props interface
 interface AddNewCardProps extends ModalProps {
   onSave: (text: string) => void;
@@ -62,7 +59,10 @@ const AddNewCard = ({onSave, onClose, ...props}: AddNewCardProps) => {
   );
 
   return (
-    <Modal transparent animationType="slide" {...props}>
+    <Modal
+      backdropOpacity={0.1}
+      style={{backgroundColor: 'rgba(0,0,0,0.5)'}}
+      {...props}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           {/* Header */}
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.fontRegular,
     fontSize: moderateScale(10),
     color: 'red',
-    padding: moderateScale(10),
+    padding: moderateScale(2),
   },
 
   saveButton: {

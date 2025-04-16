@@ -8,6 +8,7 @@ import {
   Pressable,
   Text,
   Dimensions,
+  Platform,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -302,9 +303,11 @@ const DebitCardScreen = () => {
 
       {/* Add New Card */}
       <AddNewCard
-        visible={isAddNewCardModelOpen}
+        isOpen={isAddNewCardModelOpen}
         onSave={handleAddNewcard}
         onClose={() => setIsAddNewCardOpenModelOpen(false)}
+        coverScreen={Platform.OS === 'ios' ? true : false}
+        onClosed={() => setIsAddNewCardOpenModelOpen(false)}
       />
     </View>
   );
