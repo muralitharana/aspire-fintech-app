@@ -30,13 +30,16 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <TouchableOpacity
+      testID="button-container"
       style={[
         styles.button,
         {backgroundColor: Colors[buttonColor]},
         {...buttonStyles},
       ]}
       {...props}>
-      <Text style={[styles.title, {color: Colors[titleColor]}, {...textStyle}]}>
+      <Text
+        testID="button-text"
+        style={[styles.title, {color: Colors[titleColor]}, {...textStyle}]}>
         {title}
       </Text>
     </TouchableOpacity>

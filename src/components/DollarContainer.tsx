@@ -10,7 +10,7 @@ import {Fonts} from '../configs/Fonts';
 
 const DollarContainer = () => {
   return (
-    <View style={styles.container}>
+    <View testID="dollar-container" style={styles.container}>
       <Text style={styles.dollarText}>{`S$`}</Text>
     </View>
   );

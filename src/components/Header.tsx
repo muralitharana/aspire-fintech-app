@@ -20,7 +20,9 @@ const Header = ({title, textStyles, onBackButtonPress}: HeaderProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
-        {onBackButtonPress && <BackButton onPress={onBackButtonPress} />}
+        {onBackButtonPress && (
+          <BackButton onPress={onBackButtonPress} color={'grey'} />
+        )}
         <Text style={[styles.title, {...textStyles}]}>{title}</Text>
       </View>
 
