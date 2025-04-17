@@ -18,6 +18,9 @@ npm run android
 ```
 npm run iOS
 ```
+```
+npm run test
+```
 
 
 https://github.com/user-attachments/assets/f5e05d87-19aa-453b-bdbc-d580d9a84906
