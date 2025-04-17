@@ -2,6 +2,9 @@
 node version: **>=18**
 Android and iOS setup mobile development setup
 
+**Build With** 
+_Typescript_, _ReduxSaga_, _Some Unit Testing_, _CrossPlatfrom_
+
 # Getting Started
 ```
 npm install
