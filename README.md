@@ -1,6 +1,7 @@
 # Prereqisites
 node version: **>=18**
 Android and iOS setup mobile development setup
+Recommended to use Android / iOS Emulator to avoid any api failure
 
 **Build With** 
 _Typescript_, _ReduxSaga_, _Some Unit Testing_, _CrossPlatfrom_
